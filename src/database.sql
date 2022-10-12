@@ -1,0 +1,14 @@
+CREATE TABLE users(
+    id SERIAL NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE urls(
+    id SERIAL PRIMARY KEY NOT NULL,
+    "userId" INT REFERENCES users(id) NOT NULL,
+    url TEXT NOT NULL,
+    "shortUrl" TEXT NOT NULL,
+    views BIGINT NOT NULL DEFAULT(0)
+);
