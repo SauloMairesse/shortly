@@ -37,12 +37,26 @@ export async function createUrl(req, res){
     }
 }
 
-export async function urlById(){
+export async function urlById(req, res){
+    const {id} = req.params
 
     try {
+        const {rows: url} = await db.query(`
+            SELECT id, "shortUrl", url
+            FROM urls
+            WHERE urls.id = $1`,
+            [id] )
+
+        if(!url[0]){
+            throw { type: 'not found'}
+        }    
+
+        return res.status(200).send(url[0])
         
     } catch (error) {
-        
+        if (error.type === 'not found') { 
+            return res.sendStatus(404) 
+        }
     }
 }
 
