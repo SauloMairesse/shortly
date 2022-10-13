@@ -4,8 +4,8 @@ dotenv.config()
 
 export function tokenValidation(req, res, next) {
 
-    const authorization = req.headers.authorization;
-    const token = authorization?.replace("Bearer ", "").trim();
+    const authorization = req.headers.authorization
+    const token = authorization.replace("Bearer ", "").trim();
     const JWT_KEY = process.env.JWT_KEY
 
     if(!token) return res.sendStatus(401)

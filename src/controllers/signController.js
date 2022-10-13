@@ -1,33 +1,34 @@
-import db from '../database'
+import db from '../database.js'
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 dotenv.config()
 
 export async function signUp(req, res){
-    const {name, password, passwordConfirmation, email} = req.body
+    const {name, password, confirmPassword, email} = req.body
 
     try{
 
-        if(password !== passwordConfirmation){ 
+        if(password !== confirmPassword){
             throw { type: "passwords must be equal"} 
         }
 
-        const { rows: userRegistered } = await db.query(``)
+        const { rows: userRegistered } = await db.query(`
+            SELECT * 
+            FROM users
+            WHERE users.email = $1`, 
+            [email] )
         
-        if( userRegistered[0] ) {
+        if( userRegistered[0]) {
             throw { type: "user already exist" } 
         }
         
         const bcryptKey = Number(process.env.BCRYPT_SALT)
         const pwBcrypt = bcrypt.hashSync(password, bcryptKey)
-        
-        const user = {
-            name : name,
-            email: email,
-            password: pwBcrypt
-        }
 
-        await db.query(``)
+        await db.query(`
+            INSERT INTO users(name, email, password)
+            VALUES ($1, $2, $3)`, 
+            [name, email, pwBcrypt] )
 
         return res.status(201).send({message: 'User was registered successfully'})
         

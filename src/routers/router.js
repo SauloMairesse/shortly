@@ -1,8 +1,8 @@
 import { Router } from "express";
-import rankingRouter from "./rankingRouter";
-import signRouter from "./signRouters";
-import urlRouter from "./urlRouters";
-import usersRouter from "./usersRouter";
+import rankingRouter from "./rankingRouter.js";
+import signRouter from "./signRouters.js";
+import urlRouter from "./urlRouters.js";
+import usersRouter from "./usersRouter.js";
 
 const router = Router()
 
