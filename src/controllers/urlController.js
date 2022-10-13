@@ -57,18 +57,39 @@ export async function urlById(req, res){
         if (error.type === 'not found') { 
             return res.sendStatus(404) 
         }
+        return res.sendStatus(500);
     }
 }
 
-export async function openUrl(){
-
+export async function openUrl(req, res){
+    const {shortUrl} = req.params 
+    
     try {
+        const {rows: urlByShort} = await db.query(`
+            SELECT *
+            FROM urls
+            WHERE urls."shortUrl" = $1`, 
+            [shortUrl] )
         
+        if(!urlByShort[0]) {
+            throw { type: 'not found' }
+        }
+
+        await db.query(`
+            UPDATE urls 
+            SET views = views + 1
+            WHERE "shortUrl" = $1`,
+            [shortUrl] )
+        
+        return res.status(301).redirect(`${urlByShort[0].url}`)
+
     } catch (error) {
-        
+        if (error.type === 'not found') { 
+            return res.sendStatus(404) 
+        }
+        return res.sendStatus(500);
     }
 }
-
 
 export async function deleteUrl(){
 
