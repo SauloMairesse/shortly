@@ -1,6 +1,7 @@
 import db from '../database.js'
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
 dotenv.config()
 
 export async function signUp(req, res){
@@ -49,10 +50,14 @@ export async function signIn(req, res){
 
     try{
 
-        const {rows: userByEmail} = await db.query(``)
+        const {rows: userByEmail} = await db.query(`
+            SELECT * 
+            FROM users
+            WHERE users.email = $1`,
+            [email] )
 
         const pwConfirmation = bcrypt.compareSync(password, userByEmail[0].password)
-    
+
         if(!userByEmail[0] || !pwConfirmation){ 
             throw { type: "email or password wrong" } 
         }
