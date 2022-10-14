@@ -91,11 +91,40 @@ export async function openUrl(req, res){
     }
 }
 
-export async function deleteUrl(){
-
+export async function deleteUrl(req, res){
+    const {id} = req.params
+    const authorization = req.headers.authorization
+    const token = authorization.replace("Bearer ", "").trim();
+ 
     try {
-        
+        const {userId} = jwt.verify(token, process.env.JWT_KEY)
+        const {rows: url} = await db.query(`
+            SELECT * FROM urls
+            WHERE urls.id = $1`,
+            [id] )
+
+            if(!url[0]){
+                throw { type: 'not found' }
+            }
+            if(url[0].userId != userId){
+                throw { type: 'URL does not belong to the user' }
+            }
+
+            await db.query(`
+                DELETE FROM urls
+                WHERE urls.id = $1`,
+                [id] )
+            
+            return res.sendStatus(204)
+
     } catch (error) {
+        if (error.type === 'URL does not belong to the user') { 
+            return res.sendStatus(409)
+        }
+        if (error.type === 'not found') { 
+            return res.sendStatus(404)
+        }
         
+        return res.sendStatus(500)
     }
 }
