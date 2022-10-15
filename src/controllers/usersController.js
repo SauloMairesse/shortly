@@ -26,9 +26,6 @@ export async function userMe(req, res){
 
         return res.status(200).send(test)
     } catch (error) {
-        if (error.type === 'not found') { 
-            return res.sendStatus(404)
-        }
         
         return res.sendStatus(500)
     }
