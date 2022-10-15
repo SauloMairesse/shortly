@@ -15,6 +15,11 @@ export async function userMe(req, res){
             WHERE users.id = $1
             GROUP BY users.id`,
             [userId] )
+
+        if(!userInfo[0]){
+            throw { type: 'not found' }
+        }
+        
         const {rows: urlsOfUser} = await db.query(`
             SELECT id, "shortUrl", url, views AS "visitCount" 
             FROM urls
@@ -26,6 +31,9 @@ export async function userMe(req, res){
 
         return res.status(200).send(test)
     } catch (error) {
+        if (error.type === 'not found') { 
+            return res.sendStatus(404)
+        }
         
         return res.sendStatus(500)
     }
