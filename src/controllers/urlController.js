@@ -14,9 +14,9 @@ export async function createUrl(req, res){
             SELECT * FROM urls
             WHERE urls.url = $1`, [url])
 
-        if(urlByUrl[0]){
-            throw { type: 'url already exist'}
-        }
+        // if(urlByUrl[0]){
+        //     throw { type: 'url already exist'}
+        // }
 
         const {userId} = jwt.verify(token, process.env.JWT_KEY)
         const shortUrl = nanoid(8)
@@ -119,7 +119,7 @@ export async function deleteUrl(req, res){
 
     } catch (error) {
         if (error.type === 'URL does not belong to the user') { 
-            return res.sendStatus(409)
+            return res.sendStatus(401)
         }
         if (error.type === 'not found') { 
             return res.sendStatus(404)

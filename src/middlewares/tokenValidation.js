@@ -11,7 +11,7 @@ export function tokenValidation(req, res, next) {
     if(!token) return res.sendStatus(401)
 
     jwt.verify(token, JWT_KEY, (err, user) => {
-        if(err) return res.sendStatus(403)
+        if(err) return res.sendStatus(401)
         next()
     })
 }
