@@ -15,7 +15,7 @@ export async function ranking(req, res){
         return res.status(200).send(listRank)
 
     } catch (error) {
-
+        console.log(error)
         return res.sendStatus(500)    
     }
 }

@@ -72,7 +72,7 @@ export async function signIn(req, res){
         if (err.type === "email or password wrong") { 
             return res.sendStatus(401) 
         }
-        
+        console.log(err)
         return res.sendStatus(500);
     }
 }
