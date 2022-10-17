@@ -40,7 +40,7 @@ export async function signUp(req, res){
         if (err.type === "user already exist") {
             return res.sendStatus(409)
         }
-
+        console.log(err)
         return res.sendStatus(500);
     }
 } 
